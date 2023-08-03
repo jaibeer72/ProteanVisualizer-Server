@@ -31,6 +31,13 @@ module.exports.compareTwoProteans = async (req, res) => {
       res.status(500).json({ error: 'Superimposition failed' });
     } else {
       console.log('Superimposed structure saved');
+      console.log(stdout);
+
+       // Extract the sequence alignment from the USalign output
+       const start = '(":" denotes residue pairs of d < 5.0 Angstrom, "." denotes other aligned residues)\n'
+       const alignmentStart = stdout.indexOf(start) + start.length;
+       const alignmentEnd = stdout.indexOf('#Total CPU time is');
+       const sequenceAlignment = stdout.slice(alignmentStart, alignmentEnd).trim();
 
       // Read the superimposed structure file
       const superimposedPDBPath = path.join(outputFolder, 'superimposed.pdb');
@@ -42,7 +49,10 @@ module.exports.compareTwoProteans = async (req, res) => {
       fs.unlinkSync(file2Path);
 
       // Send the superimposed structure back to the client
-      res.status(200).send(superimposedPDB);
+      res.status(200).json({
+        superimposedPDB,
+        usalignOutput: sequenceAlignment,
+      });
     }
   });
 } catch (error) {
