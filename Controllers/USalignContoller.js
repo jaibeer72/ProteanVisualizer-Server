@@ -31,7 +31,7 @@ module.exports.compareTwoProteans = async (req, res) => {
       res.status(500).json({ error: 'Superimposition failed' });
     } else {
       console.log('Superimposed structure saved');
-      console.log(stdout);
+      // console.log(stdout);
 
        // Extract the sequence alignment from the USalign output
        const start = '(":" denotes residue pairs of d < 5.0 Angstrom, "." denotes other aligned residues)\n'
